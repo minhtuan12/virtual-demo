@@ -1,0 +1,33 @@
+import { expect, test } from '@playwright/test'
+
+test('loads the first panorama and preserves destination and hotspot navigation', async ({ page }) => {
+  await page.goto('/')
+  const start = page.getByRole('button', { name: 'Start exploring' })
+  await expect(start).toBeEnabled({ timeout: 15_000 })
+  await start.click()
+  await page.getByRole('button', { name: /Rhine riverbank/ }).click()
+  await expect(page.getByText(/Sandy bank and large tree/)).toBeVisible()
+  await page.getByRole('button', { name: 'The Rhine' }).click()
+  await expect(page.getByRole('heading', { name: 'The Rhine' })).toBeVisible()
+  await page.getByRole('button', { name: 'Close' }).click()
+  await page.getByRole('button', { name: 'Along the river' }).click()
+  await expect(page.getByText(/Along the riverbank/)).toBeVisible()
+})
+
+test('preserves keyboard, theme, planet, tour, ambience, and narration controls', async ({ page }) => {
+  await page.goto('/')
+  await page.getByRole('button', { name: 'Start exploring' }).click()
+  await expect(page.getByRole('button', { name: 'Auto rotate' })).toHaveClass(/on/)
+  await page.getByRole('button', { name: 'Toggle light or dark theme' }).click()
+  await expect(page.locator('html')).toHaveAttribute('data-theme', /light|dark/)
+  await page.getByRole('button', { name: 'Little planet view' }).click()
+  await expect(page.getByRole('button', { name: 'Little planet view' })).toHaveClass(/on/)
+  await page.keyboard.press('a')
+  await page.getByRole('button', { name: /Rhine riverbank/ }).click()
+  await page.getByRole('button', { name: 'Automatic tour' }).click()
+  await expect(page.getByRole('button', { name: 'Automatic tour' })).toHaveClass(/on/)
+  await page.getByRole('button', { name: 'Ambient sound' }).click()
+  await expect(page.getByRole('status')).toContainText('synthesized')
+  await page.getByRole('button', { name: 'English narration' }).click()
+  await page.getByRole('button', { name: 'Ambient sound' }).click()
+})

@@ -8,8 +8,10 @@
     "build": "tsc -b && vite build",
     "typecheck": "tsc -b --pretty false",
     "test": "vitest run",
-    "test:e2e": "playwright test",
-    "extract:assets": "bun scripts/extract-original-assets.mjs"
+    "test:e2e": "bun run build && node scripts/run-e2e.mjs",
+    "extract:assets": "bun scripts/extract-original-assets.mjs",
+    "verify:assets": "bun scripts/verify-parity.mjs",
+    "verify": "bun run typecheck && bun run test && bun run build && bun run verify:assets && bun run test:e2e"
   },
   "overrides": {
     "@types/estree": "1.0.8"
