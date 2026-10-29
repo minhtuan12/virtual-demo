@@ -20,6 +20,19 @@ test('loads directly, filters, resets, and survives refresh', async ({ page }) =
   await expect(page.getByRole('article')).toHaveCount(4)
 })
 
+test('uses the shared theme tokens and scrolls inside the application viewport', async ({ page }) => {
+  const catalog = page.locator('.discover-page')
+  const styles = await catalog.evaluate((element) => {
+    const computed = getComputedStyle(element)
+    return { color: computed.color, background: computed.backgroundImage, clientHeight: element.clientHeight, scrollHeight: element.scrollHeight }
+  })
+  expect(styles.color).not.toBe('rgba(0, 0, 0, 0)')
+  expect(styles.background).not.toBe('none')
+  expect(styles.scrollHeight).toBeGreaterThan(styles.clientHeight)
+  await catalog.evaluate((element) => { element.scrollTop = 500 })
+  expect(await catalog.evaluate((element) => element.scrollTop)).toBeGreaterThan(0)
+})
+
 test('persists favorites and exposes keyboard-friendly details', async ({ page }) => {
   await page.getByRole('button', { name: 'Add Jelgava Palace to favorites' }).click()
   await page.reload()

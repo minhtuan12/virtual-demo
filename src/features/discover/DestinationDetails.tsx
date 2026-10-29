@@ -44,6 +44,7 @@ export function DestinationDetails({ item, onClose }: { item: DiscoverDestinatio
           <div><dt>{t('discover.modal.season')}</dt><dd>{t(item.seasonKey)}</dd></div>
           <div><dt>{t('discover.modal.terrain')}</dt><dd>{t(item.terrainKey)}</dd></div>
         </dl>
+        <p className="destination-attribution"><span>{t('discover.modal.attribution')}</span><a href={item.credit.source} target="_blank" rel="noreferrer">{item.credit.author} · {item.credit.license}</a></p>
         <a className="modal-open-360" href={`/?destination=${item.id}`}>{t('discover.actions.open360')}</a>
       </div>
     </section>

@@ -15,6 +15,7 @@ describe('DestinationDetails', () => {
     const dialog = screen.getByRole('dialog', { name: 'Jelgava Palace' })
     expect(dialog).toBeInTheDocument()
     expect(screen.getByText('45–60 min')).toBeInTheDocument()
+    expect(within(dialog).getByRole('link', { name: /Uldins Bardins.*CC BY-SA 4.0/ })).toHaveAttribute('href', 'https://commons.wikimedia.org/wiki/File:Jelgavas_pils.jpg')
     expect(within(dialog).getByRole('link', { name: 'Open 360°' })).toHaveAttribute('href', '/?destination=jelgava-palace')
     expect(screen.getByRole('button', { name: 'Close destination details' })).toHaveFocus()
 
