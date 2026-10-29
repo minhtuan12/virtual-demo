@@ -1,4 +1,5 @@
 import { en } from './en'
+import { discoverVi } from './discover'
 
 export const vi = {
   meta: { title: 'Panorama 360° · Bốn địa điểm' },
@@ -12,4 +13,5 @@ export const vi = {
   viewpoints: { jelgava: { title: 'Cung điện Jelgava' }, ruins: { title: 'Tàn tích trong công viên' }, texel: { title: 'Bãi biển Texel' }, rhineSand: { title: 'Bãi cát và cây lớn' }, rhineRiver: { title: 'Dọc bờ sông' }, rhineCanopy: { title: 'Dưới tán cây' }, rhineTrail: { title: 'Lối mòn trong rừng' } },
   navigation: { alongRiver: 'Dọc bờ sông', backToSand: 'Về bãi cát', underTrees: 'Vào dưới tán cây', toRiver: 'Ra bờ sông', forestTrail: 'Lối mòn trong rừng', backToCanopy: 'Về dưới tán cây' },
   hotspots: { jelgava: { arch: { title: 'Cổng vòm chính', description: 'Cổng vòm dẫn vào sân trong giữa mặt tiền gạch đỏ viền trắng.' }, east: { title: 'Cánh phía đông', description: 'Dãy nhà dài với hàng cửa sổ vòm xếp đều đặn.' } }, ruins: { tower: { title: 'Tháp đá còn sót lại', description: 'Mảng tường đá cao vài tầng, cây cối mọc kín xung quanh.' }, stones: { title: 'Lối đá quanh tàn tích', description: 'Những khối đá tự nhiên rải quanh chân tháp khiến việc đi lại khá khó.' } }, texel: { dunes: { title: 'Cồn cát phía xa', description: 'Dải cồn cát thấp nằm sát đường chân trời.' }, waves: { title: 'Sóng biển', description: 'Những con sóng nhỏ liên tục xô lên bãi cát.' } }, rhine: { tree: { title: 'Cây lớn bên sông', description: 'Cây lớn đứng một mình trên bãi cát, tán rộng che cả khoảng trời.' }, water: { title: 'Dòng Rhine', description: 'Mặt sông trải dài về bên phải, bờ đối diện phủ cây xanh ở xa.' }, houses: { title: 'Nhà ven sông', description: 'Dãy nhà nhỏ nằm sau bãi cỏ, cách mặt nước một quãng.' }, surface: { title: 'Mặt sông Rhine', description: 'Mặt nước phẳng, bờ đối diện xanh thẫm ở xa.' }, trees: { title: 'Nhóm cây bên bờ', description: 'Vài cây cao mọc sát mép nước, che bóng cho một đoạn bãi.' }, trunk: { title: 'Thân cây cổ thụ', description: 'Thân cây lớn nằm sát điểm đứng, cành vươn che kín phía trên.' }, bike: { title: 'Xe đạp bên lối mòn', description: 'Một chiếc xe đạp dựng cạnh lối mòn cát chạy xuyên qua rừng.' } } },
+  discover: discoverVi,
 }

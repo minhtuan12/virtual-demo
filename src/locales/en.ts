@@ -1,3 +1,5 @@
+import { discoverEn } from './discover'
+
 export const en = {
   meta: { title: 'Panorama 360° · Four places' },
   brand: { title: 'Panorama 360°', subtitle: 'Walk between places' },
@@ -38,4 +40,5 @@ export const en = {
       surface: { title: 'Rhine water', description: 'The water is calm, with the dark-green opposite bank far away.' }, trees: { title: 'Trees by the bank', description: 'Tall trees grow beside the water and shade part of the beach.' }, trunk: { title: 'Old tree trunk', description: 'A large trunk stands beside the viewpoint, with branches filling the sky overhead.' }, bike: { title: 'Bicycle by the trail', description: 'A bicycle rests beside the sandy path through the woodland.' },
     },
   },
+  discover: discoverEn,
 } as const

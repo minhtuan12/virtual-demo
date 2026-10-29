@@ -1,5 +1,7 @@
 import { NavLink } from 'react-router-dom'
+import { useTranslation } from 'react-i18next'
 
 export function SiteNavigation() {
-  return <nav className="site-navigation gl" aria-label="Main navigation"><NavLink to="/">Explore 360°</NavLink><NavLink to="/discover">Discover</NavLink></nav>
+  const { t } = useTranslation()
+  return <nav className="site-navigation gl" aria-label={t('discover.nav.label')}><NavLink to="/">{t('discover.nav.explore')}</NavLink><NavLink to="/discover">{t('discover.nav.discover')}</NavLink></nav>
 }

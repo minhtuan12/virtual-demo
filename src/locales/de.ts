@@ -1,4 +1,5 @@
 import { en } from './en'
+import { discoverDe } from './discover'
 
 export const de = {
   ...en,
@@ -12,4 +13,5 @@ export const de = {
   viewpoints: { jelgava: { title: 'Schloss Jelgava' }, ruins: { title: 'Ruine im Park' }, texel: { title: 'Strand von Texel' }, rhineSand: { title: 'Sandufer und großer Baum' }, rhineRiver: { title: 'Am Rheinufer' }, rhineCanopy: { title: 'Unter den Baumkronen' }, rhineTrail: { title: 'Waldweg' } },
   navigation: { alongRiver: 'Am Fluss entlang', backToSand: 'Zurück zum Sandufer', underTrees: 'Unter die Bäume', toRiver: 'Zum Flussufer', forestTrail: 'Waldweg', backToCanopy: 'Zurück unter die Bäume' },
   hotspots: { jelgava: { arch: { title: 'Haupttorbogen', description: 'Der Torbogen führt zwischen rot-weißen Fassaden in den Innenhof.' }, east: { title: 'Ostflügel', description: 'Ein langer Flügel mit gleichmäßig angeordneten Bogenfenstern.' } }, ruins: { tower: { title: 'Verbliebener Steinturm', description: 'Eine mehrstöckige Steinmauer, dicht von Bäumen umgeben.' }, stones: { title: 'Steine um die Ruine', description: 'Natursteine liegen am Turmfuß und erschweren den Weg.' } }, texel: { dunes: { title: 'Ferne Dünen', description: 'Ein niedriger Dünenstreifen folgt dem Horizont.' }, waves: { title: 'Meereswellen', description: 'Kleine Wellen erreichen fortwährend den Sand.' } }, rhine: { tree: { title: 'Großer Baum am Fluss', description: 'Ein einzelner Baum steht auf dem Sand und bedeckt mit seiner Krone viel vom Himmel.' }, water: { title: 'Der Rhein', description: 'Der Fluss erstreckt sich nach rechts; am fernen Ufer stehen grüne Bäume.' }, houses: { title: 'Häuser am Fluss', description: 'Kleine Häuser stehen hinter der Wiese, etwas vom Wasser entfernt.' }, surface: { title: 'Rheinwasser', description: 'Das Wasser ist ruhig und das gegenüberliegende Ufer dunkelgrün.' }, trees: { title: 'Bäume am Ufer', description: 'Hohe Bäume wachsen am Wasser und beschatten einen Teil des Strandes.' }, trunk: { title: 'Alter Baumstamm', description: 'Ein großer Stamm steht direkt am Standpunkt; Äste füllen den Himmel.' }, bike: { title: 'Fahrrad am Weg', description: 'Ein Fahrrad steht am sandigen Waldweg.' } } },
+  discover: discoverDe,
 }

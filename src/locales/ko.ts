@@ -1,4 +1,5 @@
 import { en } from './en'
+import { discoverKo } from './discover'
 
 export const ko = {
   ...en,
@@ -12,4 +13,5 @@ export const ko = {
   viewpoints: { jelgava: { title: '옐가바 궁전' }, ruins: { title: '공원 속 유적' }, texel: { title: '텍셀 해변' }, rhineSand: { title: '모래 강변과 큰 나무' }, rhineRiver: { title: '강변을 따라' }, rhineCanopy: { title: '나무 그늘 아래' }, rhineTrail: { title: '숲길' } },
   navigation: { alongRiver: '강을 따라', backToSand: '모래 강변으로', underTrees: '나무 아래로', toRiver: '강변으로', forestTrail: '숲길', backToCanopy: '나무 그늘로 돌아가기' },
   hotspots: { jelgava: { arch: { title: '중앙 아치', description: '붉은 벽돌과 흰 장식의 정면 사이 아치가 안뜰로 이어집니다.' }, east: { title: '동쪽 건물', description: '아치형 창문이 고르게 이어진 긴 건물입니다.' } }, ruins: { tower: { title: '남은 석탑', description: '여러 층 높이의 돌벽이 울창한 나무에 둘러싸여 있습니다.' }, stones: { title: '유적 주변의 돌', description: '탑 아래 자연석이 흩어져 있어 걷기 어렵습니다.' } }, texel: { dunes: { title: '멀리 보이는 사구', description: '낮은 사구가 수평선을 따라 이어집니다.' }, waves: { title: '바다의 파도', description: '작은 파도가 끊임없이 모래사장에 닿습니다.' } }, rhine: { tree: { title: '강변의 큰 나무', description: '넓은 수관을 가진 나무 한 그루가 모래 위에 서 있습니다.' }, water: { title: '라인강', description: '강이 오른쪽으로 뻗고 맞은편에는 푸른 나무가 보입니다.' }, houses: { title: '강변 주택', description: '작은 집들이 물가에서 조금 떨어진 풀밭 뒤에 있습니다.' }, surface: { title: '라인강 수면', description: '잔잔한 물 너머로 짙은 녹색의 맞은편 강변이 보입니다.' }, trees: { title: '강변의 나무', description: '높은 나무들이 물가에서 해변 일부에 그늘을 만듭니다.' }, trunk: { title: '오래된 나무줄기', description: '큰 나무줄기와 가지가 시점 바로 옆의 하늘을 채웁니다.' }, bike: { title: '숲길 옆 자전거', description: '모래 숲길 옆에 자전거 한 대가 세워져 있습니다.' } } },
+  discover: discoverKo,
 }

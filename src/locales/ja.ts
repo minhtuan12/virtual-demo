@@ -1,4 +1,5 @@
 import { en } from './en'
+import { discoverJa } from './discover'
 
 export const ja = {
   ...en,
@@ -12,4 +13,5 @@ export const ja = {
   viewpoints: { jelgava: { title: 'イェルガヴァ宮殿' }, ruins: { title: '公園の遺跡' }, texel: { title: 'テセル島の海岸' }, rhineSand: { title: '砂浜と大きな木' }, rhineRiver: { title: '川岸に沿って' }, rhineCanopy: { title: '木々の下' }, rhineTrail: { title: '森の小道' } },
   navigation: { alongRiver: '川に沿って', backToSand: '砂浜へ戻る', underTrees: '木々の下へ', toRiver: '川岸へ', forestTrail: '森の小道', backToCanopy: '木々の下へ戻る' },
   hotspots: { jelgava: { arch: { title: '中央アーチ', description: '赤レンガと白い縁取りのファサードの間から中庭へ続きます。' }, east: { title: '東棟', description: 'アーチ窓が整然と並ぶ長い建物です。' } }, ruins: { tower: { title: '残された石塔', description: '数階分の高さの石壁が木々に囲まれています。' }, stones: { title: '遺跡周辺の石', description: '塔の足元に自然石が散らばり、歩きにくくなっています。' } }, texel: { dunes: { title: '遠くの砂丘', description: '低い砂丘が地平線に沿って続きます。' }, waves: { title: '海の波', description: '小さな波が絶えず砂浜へ届きます。' } }, rhine: { tree: { title: '川辺の大木', description: '広い樹冠の一本の木が砂浜に立っています。' }, water: { title: 'ライン川', description: '川は右へ伸び、遠くの対岸は緑に覆われています。' }, houses: { title: '川辺の家', description: '小さな家々が水辺から少し離れた草地の後ろにあります。' }, surface: { title: 'ライン川の水面', description: '穏やかな水面の向こうに濃緑の対岸が見えます。' }, trees: { title: '岸辺の木々', description: '高い木々が水際に育ち、浜の一部に影を落としています。' }, trunk: { title: '古い木の幹', description: '視点のすぐそばに大きな幹があり、枝が空を覆っています。' }, bike: { title: '小道の自転車', description: '森を通る砂の小道の横に自転車が置かれています。' } } },
+  discover: discoverJa,
 }
