@@ -156,7 +156,7 @@ Compare the original HTML and React build at desktop and mobile viewport sizes. 
 2. Scaffold and implement the React migration only.
 3. Install and lock required dependencies.
 4. Run automated and manual parity verification.
-5. Create one focused React migration commit.
+5. Create a focused, reviewable React migration commit series with no new-route work mixed in.
 6. Push `main` to `origin` at `https://github.com/minhtuan12/virtual-demo.git`.
 7. Stop and report the pushed migration result.
 8. Begin separate brainstorming/design for new routes and features only afterward.
