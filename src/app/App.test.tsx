@@ -19,6 +19,6 @@ describe('App', () => {
   it('renders the discover route', () => {
     window.history.replaceState({}, '', '/discover')
     render(<App engineFactory={engineFactory} />)
-    expect(screen.getByRole('heading', { name: 'Discover' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'Four places, beyond the panorama' })).toBeInTheDocument()
   })
 })

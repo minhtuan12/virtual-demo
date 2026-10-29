@@ -15,7 +15,12 @@ bun install
 bun run dev
 ```
 
-The application runs at `/`. There are no additional product routes in this migration phase.
+The application has two routes:
+
+- `/` — the original 360° panorama experience
+- `/discover` — a standard destination catalog with search, country/category filters, favorites, practical details, and links into the matching panorama
+
+Discover favorites are stored locally in the browser. Suggested duration, season, and terrain are static planning guidance rather than live travel data.
 
 ## Verification
 
@@ -31,6 +36,7 @@ The release gate runs strict TypeScript checking, the full unit/integration suit
 - Auto rotation, automatic Rhine tour, fullscreen, light/dark mode, and little-planet view
 - Synthesized ambience matching the original destination profiles
 - Interface and destination content in English, Vietnamese, German, Korean, and Japanese
+- Responsive Discover catalog with persistent favorites and accessible destination detail dialogs
 - English-only browser narration in every interface language
 - Optional AI guide through `window.claude.use('sample')`; the control stays hidden when unavailable
 
