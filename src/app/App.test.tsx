@@ -11,7 +11,14 @@ const engineFactory: PanoramaEngineFactory = () => controller
 
 describe('App', () => {
   it('renders the panorama product name', () => {
+    window.history.replaceState({}, '', '/')
     render(<App engineFactory={engineFactory} />)
     expect(screen.getByRole('heading', { name: 'Panorama 360°' })).toBeInTheDocument()
+  })
+
+  it('renders the discover route', () => {
+    window.history.replaceState({}, '', '/discover')
+    render(<App engineFactory={engineFactory} />)
+    expect(screen.getByRole('heading', { name: 'Discover' })).toBeInTheDocument()
   })
 })

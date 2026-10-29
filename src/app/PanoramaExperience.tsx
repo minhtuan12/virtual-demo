@@ -18,10 +18,13 @@ import { useAiGuide } from '../features/ai-guide/useAiGuide'
 import { AiGuide } from '../features/ai-guide/AiGuide'
 import type { Locale } from '../features/language/language'
 import { destinationById } from '../data/tour'
+import { destinationFromSearch } from './destinationQuery'
 
 export function PanoramaExperience({ engineFactory }: { engineFactory?: PanoramaEngineFactory }) {
   const { t, i18n } = useTranslation()
-  const tourState = useTour()
+  const initialDestinationId = useRef(destinationFromSearch(window.location.search)).current
+  const initialViewpointId = initialDestinationId ? destinationById(initialDestinationId)?.viewpointIds[0] : undefined
+  const tourState = useTour(initialViewpointId)
   const [ready, setReady] = useState(false)
   const [started, setStarted] = useState(false)
   const [autoRotate, setAutoRotateState] = useState(true)

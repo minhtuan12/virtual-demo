@@ -1,9 +1,10 @@
 import '../features/language/i18n'
 import '../styles/tokens.css'
 import '../styles/panorama.css'
-import { PanoramaExperience } from './PanoramaExperience'
+import { BrowserRouter } from 'react-router-dom'
 import type { PanoramaEngineFactory } from '../panorama/usePanoramaEngine'
+import { AppRoutes } from './AppRoutes'
 
 export function App({ engineFactory }: { engineFactory?: PanoramaEngineFactory } = {}) {
-  return <PanoramaExperience engineFactory={engineFactory} />
+  return <BrowserRouter><AppRoutes engineFactory={engineFactory} /></BrowserRouter>
 }
