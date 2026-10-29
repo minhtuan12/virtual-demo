@@ -42,7 +42,12 @@ export interface Tour {
   viewpoints: Viewpoint[]
 }
 
-const assetUrl = (file: string) => new URL(`../assets/${file}`, import.meta.url).href
+const assetModules = import.meta.glob('../assets/**/*.{jpg,png,webp}', { eager: true, query: '?url', import: 'default' }) as Record<string, string>
+const assetUrl = (file: string) => {
+  const url = assetModules[`../assets/${file}`]
+  if (!url) throw new Error(`Missing extracted asset: ${file}`)
+  return url
+}
 const panorama = (index: number) => assetUrl(manifest.panoramas[index].file)
 const thumbnail = (index: number) => assetUrl(manifest.thumbnails[index].file)
 

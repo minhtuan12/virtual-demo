@@ -1,0 +1,20 @@
+import { useTranslation } from 'react-i18next'
+
+interface ToolbarProps {
+  autoRotate: boolean
+  autoTour: boolean
+  planet: boolean
+  onAutoRotate(): void
+  onTheme(): void
+  onFullscreen(): void
+  onAutoTour(): void
+  onPlanet(): void
+}
+
+export function Toolbar(props: ToolbarProps) {
+  const { t } = useTranslation()
+  return <>
+    <div className="tools"><button className={`gl ${props.autoRotate ? 'on' : ''}`} title={t('controls.autoRotate')} aria-label={t('controls.autoRotate')} onClick={props.onAutoRotate}>↻</button><button className="gl" title={t('controls.theme')} aria-label={t('controls.theme')} onClick={props.onTheme}>◐</button><button className="gl" title={t('controls.fullscreen')} aria-label={t('controls.fullscreen')} onClick={props.onFullscreen}>⛶</button></div>
+    <div className="tools-secondary"><button className={`gl ${props.autoTour ? 'on' : ''}`} title={t('controls.autoTour')} aria-label={t('controls.autoTour')} onClick={props.onAutoTour}>▶</button><button className={`gl ${props.planet ? 'on' : ''}`} title={t('controls.planet')} aria-label={t('controls.planet')} onClick={props.onPlanet}>◉</button></div>
+  </>
+}

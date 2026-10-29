@@ -5,7 +5,7 @@ import { en } from '../../locales/en'
 import { ja } from '../../locales/ja'
 import { ko } from '../../locales/ko'
 import { vi } from '../../locales/vi'
-import { LANGUAGE_STORAGE_KEY, resolveLocale } from './language'
+import { LANGUAGE_STORAGE_KEY, resolveLocale } from './locale'
 
 const stored = typeof localStorage === 'undefined' ? undefined : localStorage.getItem(LANGUAGE_STORAGE_KEY)
 

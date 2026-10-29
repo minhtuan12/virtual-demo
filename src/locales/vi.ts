@@ -1,7 +1,7 @@
 import { en } from './en'
 
 export const vi = {
-  meta: { title: 'Panorama 360° · Bốn địa điểm có thật' },
+  meta: { title: 'Panorama 360° · Bốn địa điểm' },
   brand: { title: 'Panorama 360°', subtitle: 'Đi bộ giữa các điểm · Bản demo' },
   intro: { title: 'Đứng giữa bốn địa điểm có thật', body: 'Khám phá bốn địa điểm có thật qua ảnh panorama 360°. Bờ sông Rhine có bốn điểm đứng nối liền: dùng mũi tên trên ảnh hoặc W/S để di chuyển, A/D để xoay và chọn i để xem chi tiết.', loading: 'Đang tải ảnh…', start: 'Bắt đầu tham quan' },
   controls: { autoRotate: 'Tự xoay', theme: 'Đổi giao diện sáng hoặc tối', fullscreen: 'Toàn màn hình', ai: 'Hỏi hướng dẫn viên AI', autoTour: 'Tham quan tự động', narration: 'Thuyết minh tiếng Anh', ambience: 'Âm thanh môi trường', planet: 'Góc nhìn hành tinh nhỏ', forward: 'Tiến', backward: 'Lùi', left: 'Xoay trái', right: 'Xoay phải', language: 'Ngôn ngữ', close: 'Đóng', send: 'Gửi' },
