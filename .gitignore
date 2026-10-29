@@ -4,6 +4,7 @@
 # Dependencies and generated builds
 node_modules/
 dist/
+.tmp/
 
 # Local environment files
 .env

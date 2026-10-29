@@ -1,0 +1,61 @@
+{
+  "panoramas": [
+    {
+      "file": "panoramas/panorama-01.jpg",
+      "sha256": "1ce5f90e5ffb3eba43c39f71451857a38f1c5d8f2752ca8713a22cc0d133c208",
+      "bytes": 957035
+    },
+    {
+      "file": "panoramas/panorama-02.jpg",
+      "sha256": "0c3f1bd53fce1c7c7419f6e6232ffc36b17b56fc552a3826ed597d550a683779",
+      "bytes": 1405692
+    },
+    {
+      "file": "panoramas/panorama-03.jpg",
+      "sha256": "e2afc24b2a873128c542c6438c485f30f439531a1ed017672ab1f22abeeb9b4b",
+      "bytes": 556264
+    },
+    {
+      "file": "panoramas/panorama-04.jpg",
+      "sha256": "85f03cd986af625a18d5baad2ebc3f0782c7090444b321911a52e2b43e6e0e8b",
+      "bytes": 876632
+    },
+    {
+      "file": "panoramas/panorama-05.jpg",
+      "sha256": "ec4b9c3b5fc45b57002479667e00078dade3c72d76b1b95c7772f5b5848957e8",
+      "bytes": 679192
+    },
+    {
+      "file": "panoramas/panorama-06.jpg",
+      "sha256": "281f71e97490af8a183d61207d4bdab9aed3fcd380536cd85a20d83c96ec07be",
+      "bytes": 1136015
+    },
+    {
+      "file": "panoramas/panorama-07.jpg",
+      "sha256": "134e6e14350f273fc2451467ed63be9bbe94dc2dd3e4d06b447081b523348557",
+      "bytes": 1386050
+    }
+  ],
+  "thumbnails": [
+    {
+      "file": "thumbnails/thumbnail-01.jpg",
+      "sha256": "e269ee60d34e860dcbf2112a98d0d9659adca19c329b491de93f62bd7257dadc",
+      "bytes": 1750
+    },
+    {
+      "file": "thumbnails/thumbnail-02.jpg",
+      "sha256": "9a44220ae19b2290dc70ae759a409b3f8536c51a65582739728f0be3b28463fa",
+      "bytes": 1981
+    },
+    {
+      "file": "thumbnails/thumbnail-03.jpg",
+      "sha256": "af22459ec6f93508086d58506674f54e3436d145a4e5c75738f031a260fbf2f9",
+      "bytes": 1721
+    },
+    {
+      "file": "thumbnails/thumbnail-04.jpg",
+      "sha256": "3f9009aae0ef42f1f5b150f8898819ae8e53eb6d03cb1e4a64edc52cb7a76d6f",
+      "bytes": 1818
+    }
+  ]
+}
