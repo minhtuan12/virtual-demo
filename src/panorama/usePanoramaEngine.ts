@@ -1,16 +1,20 @@
 import { useEffect, useRef, useState } from 'react'
 import { PanoramaEngine } from './PanoramaEngine'
-import type { PanoramaCallbacks } from './types'
+import type { PanoramaCallbacks, PanoramaController } from './types'
 
-export function usePanoramaEngine(callbacks: PanoramaCallbacks = {}) {
+export type PanoramaEngineFactory = (canvas: HTMLCanvasElement, callbacks: PanoramaCallbacks) => PanoramaController
+
+const defaultFactory: PanoramaEngineFactory = (canvas, callbacks) => new PanoramaEngine(canvas, undefined, callbacks)
+
+export function usePanoramaEngine(callbacks: PanoramaCallbacks = {}, factory: PanoramaEngineFactory = defaultFactory) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const callbacksRef = useRef(callbacks)
-  const [engine, setEngine] = useState<PanoramaEngine | null>(null)
+  const [engine, setEngine] = useState<PanoramaController | null>(null)
   callbacksRef.current = callbacks
 
   useEffect(() => {
     if (!canvasRef.current) return
-    const instance = new PanoramaEngine(canvasRef.current, undefined, {
+    const instance = factory(canvasRef.current, {
       onReady: () => callbacksRef.current.onReady?.(),
       onViewpointChange: (viewpoint) => callbacksRef.current.onViewpointChange?.(viewpoint),
       onFrame: () => callbacksRef.current.onFrame?.(),
@@ -21,7 +25,7 @@ export function usePanoramaEngine(callbacks: PanoramaCallbacks = {}) {
       instance.dispose()
       setEngine(null)
     }
-  }, [])
+  }, [factory])
 
   return { canvasRef, engine }
 }
