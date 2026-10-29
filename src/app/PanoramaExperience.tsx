@@ -97,7 +97,7 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
       const target = event.target as HTMLElement | null
-      if (target instanceof HTMLElement && target.matches('input, select, textarea, [contenteditable="true"]')) return
+      if (target instanceof HTMLElement && target.matches('input, select, textarea, button, [contenteditable="true"]')) return
       const key = event.key.toLowerCase()
       if (key === 'w' || key === 'arrowup') move(false)
       else if (key === 's' || key === 'arrowdown') move(true)

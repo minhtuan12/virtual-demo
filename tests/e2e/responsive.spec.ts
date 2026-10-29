@@ -4,7 +4,7 @@ test('keeps primary controls and horizontal destination navigation usable on mob
   await page.setViewportSize({ width: 390, height: 844 })
   await page.goto('/')
   await expect(page.getByRole('heading', { name: 'Panorama 360°' })).toBeVisible()
-  await expect(page.getByRole('combobox', { name: 'Language' })).toBeVisible()
+  await expect(page.getByRole('button', { name: 'Language' })).toBeVisible()
   const destinations = page.getByRole('navigation', { name: 'Destinations' })
   await expect(destinations).toBeVisible()
   const box = await destinations.boundingBox()

@@ -53,16 +53,17 @@ describe('PanoramaExperience', () => {
     fireEvent.keyDown(input, { key: 'd' })
     expect(controller.turn).not.toHaveBeenCalledWith(30)
     input.remove()
-    const select = screen.getByRole('combobox', { name: 'Language' })
-    fireEvent.keyDown(select, { key: 'ArrowRight' })
+    const languageButton = screen.getByRole('button', { name: 'Language' })
+    fireEvent.keyDown(languageButton, { key: 'ArrowRight' })
     expect(controller.turn).not.toHaveBeenCalledWith(30)
   })
 
   it('changes and persists the selected language', async () => {
     const { markReady } = setup()
     markReady()
-    fireEvent.change(screen.getByRole('combobox', { name: 'Language' }), { target: { value: 'vi' } })
-    expect(await screen.findByText('Đi bộ giữa các điểm · Bản demo')).toBeInTheDocument()
+    fireEvent.click(screen.getByRole('button', { name: 'Language' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Tiếng Việt' }))
+    expect(await screen.findByText('Đi bộ giữa các điểm')).toBeInTheDocument()
     expect(localStorage.getItem('panorama.locale')).toBe('vi')
   })
 

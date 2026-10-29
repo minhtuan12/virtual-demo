@@ -1,4 +1,4 @@
-# Virtual Demo
+# Panorama 360°
 
 React + TypeScript migration of the original single-file Panorama 360° experience. The original HTML remains in the repository as the immutable visual and behavioral reference.
 
@@ -38,4 +38,4 @@ Browser narration uses the closest installed `en-US` or English voice and otherw
 
 ## Original reference
 
-`Panorama 360° · Hướng dẫn viên AI.html` and baseline commit `76ff08a` contain the untouched original demo. Extracted image files are verified against the embedded data URLs without recompression.
+`Panorama 360° · Hướng dẫn viên AI.html` and baseline commit `76ff08a` contain the untouched original experience. Extracted image files are verified against the embedded data URLs without recompression.

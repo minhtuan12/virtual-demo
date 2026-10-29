@@ -1,9 +1,9 @@
 export const en = {
-  meta: { title: 'Panorama 360° · Four real places' },
-  brand: { title: 'Panorama 360°', subtitle: 'Walk between places · Demo' },
+  meta: { title: 'Panorama 360° · Four places' },
+  brand: { title: 'Panorama 360°', subtitle: 'Walk between places' },
   intro: {
-    title: 'Stand inside four real places',
-    body: 'Explore four real places through 360° panoramas. The Rhine riverbank includes four connected viewpoints: use the arrows in the image or W/S to move, A/D to turn, and select i for details.',
+    title: 'Stand inside four places',
+    body: 'Explore four places through 360° panoramas. The Rhine riverbank includes four connected viewpoints: use the arrows in the image or W/S to move, A/D to turn, and select i for details.',
     loading: 'Loading images…', start: 'Start exploring',
   },
   controls: {
@@ -13,7 +13,7 @@ export const en = {
   status: { single: 'One viewpoint · drag to look around', point: 'point {{current}}/{{total}}', photo: 'Photo', source: 'source' },
   toasts: {
     single: 'This destination has only one viewpoint', turn: 'Turning toward the path', tourEnd: 'End of the tour', chooseRhine: 'Choose the Rhine riverbank to start the automatic tour',
-    tourOn: 'Automatic tour: drag the image or select again to stop', narrationOn: 'English narration: on', narrationUnsupported: 'This browser does not support narration', ambienceDisclosure: 'Ambient sound is synthesized, not a real recording',
+    tourOn: 'Automatic tour: drag the image or select again to stop', narrationOn: 'English narration: on', narrationUnsupported: 'This browser does not support narration', ambienceDisclosure: 'Ambient sound is synthesized rather than recorded on location',
   },
   ai: {
     title: 'AI guide', suggestionSpecial: 'What is special about this place?', suggestionSeason: 'What is the best season to visit?', placeholder: 'Ask about the place you are viewing…',

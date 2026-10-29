@@ -21,8 +21,14 @@ describe('locale resources', () => {
   })
 
   it('uses English product copy as the canonical default', () => {
-    expect(en.brand.subtitle).toBe('Walk between places · Demo')
+    expect(en.brand.subtitle).toBe('Walk between places')
     expect(en.intro.start).toBe('Start exploring')
     expect(en.controls.narration).toBe('English narration')
+  })
+
+  it('does not describe the experience as a demo or claim places and recordings are real', () => {
+    for (const resource of [en, vi, de, ko, ja]) {
+      expect(JSON.stringify(resource)).not.toMatch(/demo|real places|real recording|có thật|thu âm thật|echte Orte|echte Aufnahme|실제 장소|실제 녹음|데모|実在|実録|デモ/i)
+    }
   })
 })
