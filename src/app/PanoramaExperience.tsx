@@ -12,6 +12,8 @@ import { StatusOverlays } from '../features/tour/StatusOverlays'
 import { Toolbar } from '../features/tour/Toolbar'
 import { nextTourViewpoint, useTour } from '../features/tour/useTour'
 import { LanguagePicker } from '../features/language/LanguagePicker'
+import { useNarration } from '../features/audio/useNarration'
+import { useAmbience } from '../features/audio/useAmbience'
 
 export function PanoramaExperience({ engineFactory }: { engineFactory?: PanoramaEngineFactory }) {
   const { t, i18n } = useTranslation()
@@ -27,6 +29,13 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
   const toastTimer = useRef<number | undefined>(undefined)
   const stableFactory = useRef(engineFactory).current
   const { canvasRef, engine } = usePanoramaEngine({ onReady: () => setReady(true), onFrame: () => hotspotLayer.current?.update() }, stableFactory)
+  const english = i18n.getFixedT('en')
+  const destinationKey = ({ 'jelgava-palace': 'jelgava', 'park-ruins': 'ruins', 'texel-beach': 'texel', 'rhine-riverbank': 'rhine' } as const)[tourState.destination.id as 'jelgava-palace' | 'park-ruins' | 'texel-beach' | 'rhine-riverbank']
+  const narrationText = tourState.destination.viewpointIds.length > 1
+    ? `${english(tourState.viewpoint.titleKey)}. ${tourState.viewpoint.info[0] ? english(tourState.viewpoint.info[0].descriptionKey) : ''}`
+    : english(`destinations.${destinationKey}.description`)
+  const narration = useNarration(narrationText)
+  const ambience = useAmbience(tourState.destination.id)
 
   const showToast = useCallback((message: string) => {
     setToast(message)
@@ -90,7 +99,7 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
     <PanoramaCanvas canvasRef={canvasRef} />
     <div className="brand gl"><div className="logo">360°</div><div><h1>{t('brand.title')}</h1><small>{t('brand.subtitle')}</small></div></div>
     <LanguagePicker />
-    <Toolbar autoRotate={autoRotate} autoTour={autoTour} planet={planet} onAutoRotate={toggleAutoRotate} onTheme={toggleTheme} onFullscreen={fullscreen} onAutoTour={() => { if (!tourState.viewpoint.navigation.length) showToast(t('toasts.chooseRhine')); else { setAutoTour((value) => !value); showToast(t('toasts.tourOn')) } }} onPlanet={togglePlanet} />
+    <Toolbar autoRotate={autoRotate} autoTour={autoTour} planet={planet} narration={narration.enabled} ambience={ambience.enabled} onAutoRotate={toggleAutoRotate} onTheme={toggleTheme} onFullscreen={fullscreen} onAutoTour={() => { if (!tourState.viewpoint.navigation.length) showToast(t('toasts.chooseRhine')); else { setAutoTour((value) => !value); showToast(t('toasts.tourOn')) } }} onNarration={() => { const result = narration.toggle(); if (result === 'unsupported') showToast(t('toasts.narrationUnsupported')); else if (result === 'enabled') showToast(t('toasts.narrationOn')) }} onAmbience={() => { void ambience.toggle().then((enabled) => { if (enabled) showToast(t('toasts.ambienceDisclosure')) }) }} onPlanet={togglePlanet} />
     <DestinationList selectedId={tourState.destination.id} onSelect={tourState.selectDestination} />
     <HotspotLayer ref={hotspotLayer} viewpoint={tourState.viewpoint} controller={engine} onNavigate={tourState.goTo} onInfo={(index) => tourState.openInfo(tourState.viewpoint.info[index])} />
     <InfoCard info={tourState.activeInfo} onClose={tourState.closeInfo} />
