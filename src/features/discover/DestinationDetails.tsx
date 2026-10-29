@@ -32,7 +32,7 @@ export function DestinationDetails({ item, onClose }: { item: DiscoverDestinatio
   return createPortal(<div className="destination-modal-backdrop" onMouseDown={(event) => { if (event.target === event.currentTarget) onClose() }}>
     <section className="destination-modal gl" role="dialog" aria-modal="true" aria-labelledby={titleId}>
       <button ref={closeRef} type="button" className="modal-close" aria-label={t('discover.modal.close')} onClick={onClose}>×</button>
-      <img src={item.thumbnail} alt={t(`discover.imageAlt.${item.destinationKey}`)} />
+      <img src={item.coverImage} alt={t(`discover.imageAlt.${item.destinationKey}`)} />
       <div className="destination-modal-content">
         <p className="modal-kicker">{t(`discover.categories.${item.category}`)} · {t(`discover.countries.${item.country}`)}</p>
         <h2 id={titleId}>{name}</h2>
