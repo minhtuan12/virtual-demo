@@ -14,6 +14,9 @@ import { nextTourViewpoint, useTour } from '../features/tour/useTour'
 import { LanguagePicker } from '../features/language/LanguagePicker'
 import { useNarration } from '../features/audio/useNarration'
 import { useAmbience } from '../features/audio/useAmbience'
+import { useAiGuide } from '../features/ai-guide/useAiGuide'
+import { AiGuide } from '../features/ai-guide/AiGuide'
+import type { Locale } from '../features/language/language'
 
 export function PanoramaExperience({ engineFactory }: { engineFactory?: PanoramaEngineFactory }) {
   const { t, i18n } = useTranslation()
@@ -36,6 +39,14 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
     : english(`destinations.${destinationKey}.description`)
   const narration = useNarration(narrationText)
   const ambience = useAmbience(tourState.destination.id)
+  const guide = useAiGuide({
+    locale: i18n.language.slice(0, 2) as Locale,
+    place: t(`destinations.${destinationKey}.name`),
+    location: t(`destinations.${destinationKey}.location`),
+    description: t(`destinations.${destinationKey}.description`),
+    viewpoint: t(tourState.viewpoint.titleKey),
+    details: tourState.viewpoint.info.map((item) => `${t(item.titleKey)} - ${t(item.descriptionKey)}`),
+  })
 
   const showToast = useCallback((message: string) => {
     setToast(message)
@@ -99,7 +110,8 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
     <PanoramaCanvas canvasRef={canvasRef} />
     <div className="brand gl"><div className="logo">360°</div><div><h1>{t('brand.title')}</h1><small>{t('brand.subtitle')}</small></div></div>
     <LanguagePicker />
-    <Toolbar autoRotate={autoRotate} autoTour={autoTour} planet={planet} narration={narration.enabled} ambience={ambience.enabled} onAutoRotate={toggleAutoRotate} onTheme={toggleTheme} onFullscreen={fullscreen} onAutoTour={() => { if (!tourState.viewpoint.navigation.length) showToast(t('toasts.chooseRhine')); else { setAutoTour((value) => !value); showToast(t('toasts.tourOn')) } }} onNarration={() => { const result = narration.toggle(); if (result === 'unsupported') showToast(t('toasts.narrationUnsupported')); else if (result === 'enabled') showToast(t('toasts.narrationOn')) }} onAmbience={() => { void ambience.toggle().then((enabled) => { if (enabled) showToast(t('toasts.ambienceDisclosure')) }) }} onPlanet={togglePlanet} />
+    <Toolbar autoRotate={autoRotate} autoTour={autoTour} planet={planet} narration={narration.enabled} ambience={ambience.enabled} aiAvailable={guide.available} aiOpen={guide.open} onAi={guide.open ? guide.close : guide.show} onAutoRotate={toggleAutoRotate} onTheme={toggleTheme} onFullscreen={fullscreen} onAutoTour={() => { if (!tourState.viewpoint.navigation.length) showToast(t('toasts.chooseRhine')); else { setAutoTour((value) => !value); showToast(t('toasts.tourOn')) } }} onNarration={() => { const result = narration.toggle(); if (result === 'unsupported') showToast(t('toasts.narrationUnsupported')); else if (result === 'enabled') showToast(t('toasts.narrationOn')) }} onAmbience={() => { void ambience.toggle().then((enabled) => { if (enabled) showToast(t('toasts.ambienceDisclosure')) }) }} onPlanet={togglePlanet} />
+    {guide.available && guide.open && <AiGuide guide={guide} />}
     <DestinationList selectedId={tourState.destination.id} onSelect={tourState.selectDestination} />
     <HotspotLayer ref={hotspotLayer} viewpoint={tourState.viewpoint} controller={engine} onNavigate={tourState.goTo} onInfo={(index) => tourState.openInfo(tourState.viewpoint.info[index])} />
     <InfoCard info={tourState.activeInfo} onClose={tourState.closeInfo} />
