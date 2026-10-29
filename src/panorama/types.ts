@@ -10,6 +10,7 @@ export interface PanoramaController {
   goTo(viewpoint: Viewpoint, transition?: boolean): Promise<void>
   move(backward?: boolean): NavigationHotspot | null
   turn(delta: number): void
+  face(x: number): void
   setAutoRotate(enabled: boolean): void
   setPlanet(enabled: boolean): void
   setFov(value: number): void
@@ -22,4 +23,7 @@ export interface PanoramaCallbacks {
   onReady?: () => void
   onViewpointChange?: (viewpoint: Viewpoint) => void
   onFrame?: () => void
+  onInteraction?: () => void
+  onDismissCard?: () => void
+  onPlanetChange?: (enabled: boolean) => void
 }

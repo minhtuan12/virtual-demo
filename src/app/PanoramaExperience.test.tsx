@@ -7,16 +7,18 @@ import { PanoramaExperience } from './PanoramaExperience'
 
 function setup() {
   let ready: (() => void) | undefined
+  let capturedCallbacks: Parameters<PanoramaEngineFactory>[1] | undefined
   const controller: PanoramaController = {
-    goTo: vi.fn(async () => {}), move: vi.fn(() => null), turn: vi.fn(), setAutoRotate: vi.fn(), setPlanet: vi.fn(), setFov: vi.fn(),
+    goTo: vi.fn(async (viewpoint) => { capturedCallbacks?.onViewpointChange?.(viewpoint) }), move: vi.fn(() => null), turn: vi.fn(), face: vi.fn(), setAutoRotate: vi.fn(), setPlanet: vi.fn(), setFov: vi.fn(),
     projectHotspot: vi.fn(() => ({ x: 400, y: 300, visible: true })), resize: vi.fn(), dispose: vi.fn(),
   }
   const factory: PanoramaEngineFactory = (_canvas, callbacks) => {
+    capturedCallbacks = callbacks
     ready = callbacks.onReady
     return controller
   }
   render(<PanoramaExperience engineFactory={factory} />)
-  return { controller, markReady: () => act(() => ready?.()) }
+  return { controller, markReady: () => act(() => ready?.()), callbacks: capturedCallbacks }
 }
 
 describe('PanoramaExperience', () => {
@@ -51,6 +53,9 @@ describe('PanoramaExperience', () => {
     fireEvent.keyDown(input, { key: 'd' })
     expect(controller.turn).not.toHaveBeenCalledWith(30)
     input.remove()
+    const select = screen.getByRole('combobox', { name: 'Language' })
+    fireEvent.keyDown(select, { key: 'ArrowRight' })
+    expect(controller.turn).not.toHaveBeenCalledWith(30)
   })
 
   it('changes and persists the selected language', async () => {

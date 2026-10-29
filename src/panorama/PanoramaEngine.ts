@@ -27,6 +27,7 @@ export interface PanoramaEngineDependencies {
   requestFrame(callback: FrameRequestCallback): number
   cancelFrame(id: number): void
   now(): number
+  prefersReducedMotion(): boolean
 }
 
 const defaults: PanoramaEngineDependencies = {
@@ -35,6 +36,7 @@ const defaults: PanoramaEngineDependencies = {
   requestFrame: (callback) => requestAnimationFrame(callback),
   cancelFrame: (id) => cancelAnimationFrame(id),
   now: () => performance.now(),
+  prefersReducedMotion: () => matchMedia('(prefers-reduced-motion: reduce)').matches,
 }
 
 export class PanoramaEngine implements PanoramaController {
@@ -85,13 +87,13 @@ export class PanoramaEngine implements PanoramaController {
     this.frameId = dependencies.requestFrame(this.tick)
   }
 
-  async loadPanorama(url: string): Promise<void> {
+  async loadPanorama(url: string): Promise<boolean> {
     const generation = ++this.loadGeneration
     return new Promise((resolve, reject) => {
       this.dependencies.loadTexture(url, (texture) => {
         if (this.disposed || generation !== this.loadGeneration) {
           texture.dispose()
-          resolve()
+          resolve(false)
           return
         }
         texture.anisotropy = this.renderer.capabilities.getMaxAnisotropy()
@@ -101,15 +103,16 @@ export class PanoramaEngine implements PanoramaController {
         this.material.map = texture
         this.material.needsUpdate = true
         this.callbacks.onReady?.()
-        resolve()
+        resolve(true)
       }, reject)
     })
   }
 
   async goTo(viewpoint: Viewpoint, transition = false): Promise<void> {
     const from = this.currentViewpoint?.id
-    await this.loadPanorama(viewpoint.panorama)
-    if (this.disposed) return
+    if (transition) this.targetFov = 46
+    const applied = await this.loadPanorama(viewpoint.panorama)
+    if (this.disposed || !applied) return
     this.currentViewpoint = viewpoint
     this.longitude = transition && from ? arrivalLongitude(from, viewpoint) : viewpoint.initialLongitude
     this.latitude = 0
@@ -117,7 +120,7 @@ export class PanoramaEngine implements PanoramaController {
     this.targetLatitude = null
     this.fov = transition ? 102 : 75
     this.targetFov = 75
-    this.planet = false
+    this.updatePlanet(false)
     this.callbacks.onViewpointChange?.(viewpoint)
   }
 
@@ -138,14 +141,20 @@ export class PanoramaEngine implements PanoramaController {
   }
 
   turn(delta: number) {
+    this.callbacks.onInteraction?.()
     this.targetLongitude = this.longitude + delta
+    this.idleAt = this.dependencies.now()
+  }
+
+  face(x: number) {
+    this.targetLongitude = normalizedXToDegrees(x)
     this.idleAt = this.dependencies.now()
   }
 
   setAutoRotate(enabled: boolean) { this.autoRotate = enabled }
 
   setPlanet(enabled: boolean) {
-    this.planet = enabled
+    this.updatePlanet(enabled)
     this.targetLatitude = enabled ? -90 : 0
     this.targetFov = enabled ? 125 : 75
   }
@@ -188,7 +197,7 @@ export class PanoramaEngine implements PanoramaController {
       const delta = wrapDegrees(this.targetLongitude - this.longitude)
       this.longitude += delta * 0.14
       if (Math.abs(delta) < 0.3) this.targetLongitude = null
-    } else if (this.autoRotate && !this.dragging && this.dependencies.now() - this.idleAt > 3500) {
+    } else if (this.autoRotate && !this.dependencies.prefersReducedMotion() && !this.dragging && this.dependencies.now() - this.idleAt > 3500) {
       this.longitude += 0.03
     }
     if (this.targetLatitude !== null) {
@@ -217,6 +226,8 @@ export class PanoramaEngine implements PanoramaController {
   }
 
   private readonly onPointerDown = (event: PointerEvent) => {
+    this.callbacks.onInteraction?.()
+    this.callbacks.onDismissCard?.()
     this.dragging = true
     this.targetLongitude = null
     if (this.planet) this.setPlanet(false)
@@ -243,12 +254,19 @@ export class PanoramaEngine implements PanoramaController {
   }
 
   private readonly onWheel = (event: WheelEvent) => {
+    this.callbacks.onInteraction?.()
     event.preventDefault()
     this.targetFov = clampFov(this.targetFov + event.deltaY * 0.04)
     this.idleAt = this.dependencies.now()
   }
 
   private readonly onResize = () => this.resize()
+
+  private updatePlanet(enabled: boolean) {
+    if (this.planet === enabled) return
+    this.planet = enabled
+    this.callbacks.onPlanetChange?.(enabled)
+  }
 
   private attachListeners() {
     this.canvas.addEventListener('pointerdown', this.onPointerDown)

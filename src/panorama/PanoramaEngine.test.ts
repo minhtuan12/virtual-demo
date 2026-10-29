@@ -1,6 +1,7 @@
 import { describe, expect, it, vi } from 'vitest'
-import type { Texture } from 'three'
+import { Vector3, type Texture } from 'three'
 import { PanoramaEngine, type PanoramaEngineDependencies } from './PanoramaEngine'
+import { viewpointById } from '../data/tour'
 
 function harness() {
   const pending = new Map<string, (texture: Texture) => void>()
@@ -14,6 +15,7 @@ function harness() {
     requestFrame: () => 42,
     cancelFrame: vi.fn(),
     now: () => 0,
+    prefersReducedMotion: () => false,
   }
   return { dependencies, pending, renderer }
 }
@@ -45,6 +47,39 @@ describe('PanoramaEngine', () => {
     await Promise.all([first, second])
     expect(stale.dispose).toHaveBeenCalledOnce()
     expect(engine.currentTexture).toBe(current)
+    engine.dispose()
+  })
+
+  it('does not commit a stale viewpoint after a newer goTo wins', async () => {
+    const { dependencies, pending } = harness()
+    const changed = vi.fn()
+    const engine = new PanoramaEngine(document.createElement('canvas'), dependencies, { onViewpointChange: changed })
+    const firstViewpoint = viewpointById('jelgava-palace')!
+    const secondViewpoint = viewpointById('park-ruins')!
+    const first = engine.goTo(firstViewpoint)
+    const second = engine.goTo(secondViewpoint)
+    pending.get(secondViewpoint.panorama)!(texture())
+    pending.get(firstViewpoint.panorama)!(texture())
+    await Promise.all([first, second])
+    expect(engine.currentViewpoint).toBe(secondViewpoint)
+    expect(changed).toHaveBeenCalledTimes(1)
+    expect(changed).toHaveBeenCalledWith(secondViewpoint)
+    engine.dispose()
+  })
+
+  it('does not auto rotate when reduced motion is requested', () => {
+    const { dependencies, renderer } = harness()
+    let frame: FrameRequestCallback | undefined
+    dependencies.requestFrame = (callback) => { frame = callback; return 42 }
+    dependencies.now = () => 4000
+    dependencies.prefersReducedMotion = () => true
+    const engine = new PanoramaEngine(document.createElement('canvas'), dependencies)
+    frame?.(4000)
+    const firstLook = engine.camera.getWorldDirection(new Vector3())
+    frame?.(4016)
+    const secondLook = engine.camera.getWorldDirection(new Vector3())
+    expect(secondLook.x).toBeCloseTo(firstLook.x)
+    expect(renderer.render).toHaveBeenCalled()
     engine.dispose()
   })
 

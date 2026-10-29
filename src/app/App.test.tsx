@@ -4,7 +4,7 @@ import type { PanoramaController } from '../panorama/types'
 import { App } from './App'
 
 const controller: PanoramaController = {
-  goTo: async () => {}, move: () => null, turn: () => {}, setAutoRotate: () => {}, setPlanet: () => {}, setFov: () => {},
+  goTo: async () => {}, move: () => null, turn: () => {}, face: () => {}, setAutoRotate: () => {}, setPlanet: () => {}, setFov: () => {},
   projectHotspot: () => ({ x: 0, y: 0, visible: false }), resize: () => {}, dispose: () => {},
 }
 const engineFactory: PanoramaEngineFactory = () => controller

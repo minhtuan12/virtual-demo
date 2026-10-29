@@ -19,4 +19,6 @@ void i18n.use(initReactI18next).init({
   returnNull: false,
 })
 
+if (typeof document !== 'undefined') document.documentElement.lang = resolveLocale(stored)
+
 export default i18n

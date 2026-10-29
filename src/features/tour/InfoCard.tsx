@@ -1,7 +1,7 @@
 import { useTranslation } from 'react-i18next'
-import type { InfoHotspot } from '../../data/tour'
+import type { CardContent } from './useTour'
 
-export function InfoCard({ info, onClose }: { info: InfoHotspot | null; onClose(): void }) {
+export function InfoCard({ info, onClose }: { info: CardContent | null; onClose(): void }) {
   const { t } = useTranslation()
   return (
     <section className={`card gl ${info ? 'on' : ''}`} aria-hidden={!info}>

@@ -17,6 +17,7 @@ import { useAmbience } from '../features/audio/useAmbience'
 import { useAiGuide } from '../features/ai-guide/useAiGuide'
 import { AiGuide } from '../features/ai-guide/AiGuide'
 import type { Locale } from '../features/language/language'
+import { destinationById } from '../data/tour'
 
 export function PanoramaExperience({ engineFactory }: { engineFactory?: PanoramaEngineFactory }) {
   const { t, i18n } = useTranslation()
@@ -26,26 +27,42 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
   const [autoRotate, setAutoRotateState] = useState(true)
   const [autoTour, setAutoTour] = useState(false)
   const [planet, setPlanetState] = useState(false)
+  const [displayedViewpoint, setDisplayedViewpoint] = useState(tourState.viewpoint)
+  const [fading, setFading] = useState(false)
   const [toast, setToast] = useState('')
   const previousViewpoint = useRef<string | undefined>(undefined)
+  const pendingWalking = useRef(false)
+  const firstTourStep = useRef(true)
   const hotspotLayer = useRef<HotspotLayerHandle>(null)
   const toastTimer = useRef<number | undefined>(undefined)
   const stableFactory = useRef(engineFactory).current
-  const { canvasRef, engine } = usePanoramaEngine({ onReady: () => setReady(true), onFrame: () => hotspotLayer.current?.update() }, stableFactory)
+  const { canvasRef, engine } = usePanoramaEngine({
+    onReady: () => setReady(true),
+    onFrame: () => hotspotLayer.current?.update(),
+    onInteraction: () => setAutoTour(false),
+    onDismissCard: tourState.closeInfo,
+    onPlanetChange: setPlanetState,
+    onViewpointChange: (viewpoint) => {
+      setDisplayedViewpoint(viewpoint)
+      setFading(false)
+      if (!pendingWalking.current) tourState.showDestinationCard(viewpoint.destinationId)
+    },
+  }, stableFactory)
+  const displayedDestination = destinationById(displayedViewpoint.destinationId) ?? tourState.destination
   const english = i18n.getFixedT('en')
-  const destinationKey = ({ 'jelgava-palace': 'jelgava', 'park-ruins': 'ruins', 'texel-beach': 'texel', 'rhine-riverbank': 'rhine' } as const)[tourState.destination.id as 'jelgava-palace' | 'park-ruins' | 'texel-beach' | 'rhine-riverbank']
-  const narrationText = tourState.destination.viewpointIds.length > 1
-    ? `${english(tourState.viewpoint.titleKey)}. ${tourState.viewpoint.info[0] ? english(tourState.viewpoint.info[0].descriptionKey) : ''}`
+  const destinationKey = ({ 'jelgava-palace': 'jelgava', 'park-ruins': 'ruins', 'texel-beach': 'texel', 'rhine-riverbank': 'rhine' } as const)[displayedDestination.id as 'jelgava-palace' | 'park-ruins' | 'texel-beach' | 'rhine-riverbank']
+  const narrationText = displayedDestination.viewpointIds.length > 1
+    ? `${english(displayedViewpoint.titleKey)}. ${displayedViewpoint.info[0] ? english(displayedViewpoint.info[0].descriptionKey) : ''}`
     : english(`destinations.${destinationKey}.description`)
   const narration = useNarration(narrationText)
-  const ambience = useAmbience(tourState.destination.id)
+  const ambience = useAmbience(displayedDestination.id)
   const guide = useAiGuide({
     locale: i18n.language.slice(0, 2) as Locale,
     place: t(`destinations.${destinationKey}.name`),
     location: t(`destinations.${destinationKey}.location`),
     description: t(`destinations.${destinationKey}.description`),
-    viewpoint: t(tourState.viewpoint.titleKey),
-    details: tourState.viewpoint.info.map((item) => `${t(item.titleKey)} - ${t(item.descriptionKey)}`),
+    viewpoint: t(displayedViewpoint.titleKey),
+    details: displayedViewpoint.info.map((item) => `${t(item.titleKey)} - ${t(item.descriptionKey)}`),
   })
 
   const showToast = useCallback((message: string) => {
@@ -62,26 +79,30 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
 
   useEffect(() => {
     if (!engine) return
-    const transitioning = previousViewpoint.current !== undefined
+    const transitioning = previousViewpoint.current !== undefined && displayedViewpoint.destinationId === tourState.viewpoint.destinationId
+    pendingWalking.current = transitioning
+    if (previousViewpoint.current !== undefined) setFading(true)
     void engine.goTo(tourState.viewpoint, transitioning)
     previousViewpoint.current = tourState.viewpoint.id
-  }, [engine, tourState.viewpoint])
+  }, [displayedViewpoint.destinationId, engine, tourState.viewpoint])
 
   const move = useCallback((backward: boolean) => {
-    if (!tourState.viewpoint.navigation.length) { showToast(t('toasts.single')); return }
+    setAutoTour(false)
+    if (!displayedViewpoint.navigation.length) { showToast(t('toasts.single')); return }
     const next = engine?.move(backward)
     if (next) tourState.goTo(next.to)
     else showToast(t('toasts.turn'))
-  }, [engine, showToast, t, tourState])
+  }, [displayedViewpoint.navigation.length, engine, showToast, t, tourState])
 
   useEffect(() => {
     const onKeyDown = (event: KeyboardEvent) => {
-      if ((event.target as HTMLElement | null)?.tagName === 'INPUT') return
+      const target = event.target as HTMLElement | null
+      if (target instanceof HTMLElement && target.matches('input, select, textarea, [contenteditable="true"]')) return
       const key = event.key.toLowerCase()
       if (key === 'w' || key === 'arrowup') move(false)
       else if (key === 's' || key === 'arrowdown') move(true)
-      else if (key === 'a' || key === 'arrowleft') engine?.turn(-30)
-      else if (key === 'd' || key === 'arrowright') engine?.turn(30)
+      else if (key === 'a' || key === 'arrowleft') { setAutoTour(false); engine?.turn(-30) }
+      else if (key === 'd' || key === 'arrowright') { setAutoTour(false); engine?.turn(30) }
       else return
       event.preventDefault()
     }
@@ -91,11 +112,22 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
 
   useEffect(() => {
     if (!autoTour) return
-    const onward = nextTourViewpoint(tourState.viewpoint.id)
-    if (!onward) { setAutoTour(false); showToast(t('toasts.tourEnd')); return }
-    const timer = window.setTimeout(() => tourState.goTo(onward), 5200)
-    return () => window.clearTimeout(timer)
-  }, [autoTour, showToast, t, tourState])
+    const onward = nextTourViewpoint(displayedViewpoint.id)
+    if (!onward) {
+      const first = displayedDestination.viewpointIds[0]
+      if (first !== displayedViewpoint.id) tourState.goTo(first)
+      return
+    }
+    const hotspot = displayedViewpoint.navigation.find((item) => item.to === onward)
+    let travelTimer: number | undefined
+    const faceDelay = firstTourStep.current ? 300 : 5200
+    firstTourStep.current = false
+    const faceTimer = window.setTimeout(() => {
+      if (hotspot) engine?.face(hotspot.x)
+      travelTimer = window.setTimeout(() => tourState.goTo(onward), 2200)
+    }, faceDelay)
+    return () => { window.clearTimeout(faceTimer); if (travelTimer) window.clearTimeout(travelTimer) }
+  }, [autoTour, displayedDestination.viewpointIds, displayedViewpoint, engine, tourState])
 
   const toggleTheme = () => {
     const root = document.documentElement
@@ -110,13 +142,14 @@ export function PanoramaExperience({ engineFactory }: { engineFactory?: Panorama
     <PanoramaCanvas canvasRef={canvasRef} />
     <div className="brand gl"><div className="logo">360°</div><div><h1>{t('brand.title')}</h1><small>{t('brand.subtitle')}</small></div></div>
     <LanguagePicker />
-    <Toolbar autoRotate={autoRotate} autoTour={autoTour} planet={planet} narration={narration.enabled} ambience={ambience.enabled} aiAvailable={guide.available} aiOpen={guide.open} onAi={guide.open ? guide.close : guide.show} onAutoRotate={toggleAutoRotate} onTheme={toggleTheme} onFullscreen={fullscreen} onAutoTour={() => { if (!tourState.viewpoint.navigation.length) showToast(t('toasts.chooseRhine')); else { setAutoTour((value) => !value); showToast(t('toasts.tourOn')) } }} onNarration={() => { const result = narration.toggle(); if (result === 'unsupported') showToast(t('toasts.narrationUnsupported')); else if (result === 'enabled') showToast(t('toasts.narrationOn')) }} onAmbience={() => { void ambience.toggle().then((enabled) => { if (enabled) showToast(t('toasts.ambienceDisclosure')) }) }} onPlanet={togglePlanet} />
+    <Toolbar autoRotate={autoRotate} autoTour={autoTour} planet={planet} narration={narration.enabled} ambience={ambience.enabled} aiAvailable={guide.available} aiOpen={guide.open} onAi={guide.open ? guide.close : guide.show} onAutoRotate={toggleAutoRotate} onTheme={toggleTheme} onFullscreen={fullscreen} onAutoTour={() => { if (!displayedViewpoint.navigation.length) showToast(t('toasts.chooseRhine')); else { firstTourStep.current = true; setAutoTour((value) => !value); showToast(t('toasts.tourOn')) } }} onNarration={() => { const result = narration.toggle(); if (result === 'unsupported') showToast(t('toasts.narrationUnsupported')); else if (result === 'enabled') showToast(t('toasts.narrationOn')) }} onAmbience={() => { void ambience.toggle().then((enabled) => { if (enabled) showToast(t('toasts.ambienceDisclosure')) }) }} onPlanet={togglePlanet} />
     {guide.available && guide.open && <AiGuide guide={guide} />}
-    <DestinationList selectedId={tourState.destination.id} onSelect={tourState.selectDestination} />
-    <HotspotLayer ref={hotspotLayer} viewpoint={tourState.viewpoint} controller={engine} onNavigate={tourState.goTo} onInfo={(index) => tourState.openInfo(tourState.viewpoint.info[index])} />
+    <DestinationList selectedId={displayedDestination.id} onSelect={(id) => { setAutoTour(false); tourState.selectDestination(id) }} />
+    <HotspotLayer ref={hotspotLayer} viewpoint={displayedViewpoint} controller={engine} onNavigate={(id) => { setAutoTour(false); tourState.goTo(id) }} onInfo={(index) => tourState.openInfo(displayedViewpoint.info[index])} />
     <InfoCard info={tourState.activeInfo} onClose={tourState.closeInfo} />
-    <StatusOverlays destination={tourState.destination} viewpoint={tourState.viewpoint} toast={toast} />
-    <DirectionPad onForward={() => move(false)} onBackward={() => move(true)} onLeft={() => engine?.turn(-30)} onRight={() => engine?.turn(30)} />
+    <StatusOverlays destination={displayedDestination} viewpoint={displayedViewpoint} toast={toast} />
+    <DirectionPad onForward={() => move(false)} onBackward={() => move(true)} onLeft={() => { setAutoTour(false); engine?.turn(-30) }} onRight={() => { setAutoTour(false); engine?.turn(30) }} />
+    <div className={`fade ${fading ? 'on' : ''}`} aria-hidden="true" />
     <Intro ready={ready} hidden={started} onStart={() => setStarted(true)} />
   </main>
 }

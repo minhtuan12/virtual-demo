@@ -18,6 +18,9 @@ export function usePanoramaEngine(callbacks: PanoramaCallbacks = {}, factory: Pa
       onReady: () => callbacksRef.current.onReady?.(),
       onViewpointChange: (viewpoint) => callbacksRef.current.onViewpointChange?.(viewpoint),
       onFrame: () => callbacksRef.current.onFrame?.(),
+      onInteraction: () => callbacksRef.current.onInteraction?.(),
+      onDismissCard: () => callbacksRef.current.onDismissCard?.(),
+      onPlanetChange: (enabled) => callbacksRef.current.onPlanetChange?.(enabled),
     })
     instance.resize()
     setEngine(instance)
